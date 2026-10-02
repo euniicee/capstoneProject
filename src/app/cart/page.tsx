@@ -1,22 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
-import { useCartStore } from '@/store/cartStore';
-import { formatCurrency } from '@/lib/utils';
+import React from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
+import { formatCurrency } from "@/lib/utils";
 
 export default function CartPage() {
   const router = useRouter();
-  const {
-    items,
-    removeItem,
-    updateQuantity,
-    getSubtotal,
-    getVAT,
-    getTotal,
-  } = useCartStore();
+  const { items, removeItem, updateQuantity, getSubtotal, getVAT, getTotal } =
+    useCartStore();
 
   const subtotal = getSubtotal();
   const vat = getVAT();
@@ -34,7 +28,7 @@ export default function CartPage() {
             Start shopping to add items to your cart
           </p>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="mt-6 rounded-lg bg-primary-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-primary-700"
           >
             Continue Shopping
@@ -52,8 +46,11 @@ export default function CartPage() {
         <div className="lg:col-span-2">
           <div className="space-y-4">
             {items.map((item) => {
-              const imageUrl = item.product.image || item.product.imageUrl || '/placeholder.png';
-              
+              const imageUrl =
+                item.product.image ||
+                item.product.imageUrl ||
+                "/placeholder.png";
+
               return (
                 <div
                   key={item.product.id}
@@ -61,7 +58,11 @@ export default function CartPage() {
                 >
                   <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                     <Image
-                      src={imageUrl}
+                      src={
+                        item.product.image?.startsWith("/")
+                          ? item.product.image
+                          : "/placeholder.png"
+                      }
                       alt={item.product.name}
                       fill
                       className="object-cover"
@@ -85,7 +86,9 @@ export default function CartPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.product.id, item.quantity - 1)
+                          }
                           className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 hover:bg-gray-100"
                         >
                           <Minus className="h-4 w-4" />
@@ -94,7 +97,9 @@ export default function CartPage() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.product.id, item.quantity + 1)
+                          }
                           disabled={item.quantity >= item.product.stock}
                           className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                         >
@@ -140,14 +145,14 @@ export default function CartPage() {
             </div>
 
             <button
-              onClick={() => router.push('/checkout')}
+              onClick={() => router.push("/checkout")}
               className="mt-6 w-full rounded-lg bg-primary-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-primary-700"
             >
               Proceed to Checkout
             </button>
 
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="mt-3 w-full rounded-lg border-2 border-primary-600 bg-white px-6 py-3 font-semibold text-primary-600 transition-colors hover:bg-primary-50"
             >
               Continue Shopping

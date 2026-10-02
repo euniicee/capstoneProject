@@ -99,6 +99,7 @@ export function getProductCategories(products: Product[]): string[] {
   return Array.from(new Set(categories));
 }
 
+
 // Filter products by search and category
 export function filterProducts(
   products: Product[],
@@ -106,10 +107,11 @@ export function filterProducts(
   selectedCategory: string
 ): Product[] {
   return products.filter((p) => {
+    const inStock = p.stock > 0;
     const matchesCategory =
       selectedCategory === 'all' || p.category === selectedCategory;
     const matchesSearch =
       p.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return inStock && matchesCategory && matchesSearch;
   });
 }

@@ -10,6 +10,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'api.oluwasetemi.dev',
       },
+
+      { protocol: "https", 
+        hostname: "cdn.vanguardngr.com" },
+
+      { protocol: "https",
+        hostname: "placehold.net"
+      }  
     ],
   },
 };
