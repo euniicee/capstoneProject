@@ -1,17 +1,27 @@
-'use client';
+"use client";
+import React, { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { ShoppingCart, ArrowLeft, Minus, Plus } from "lucide-react";
+import { fetchProductById } from "@/lib/api";
+import { useCartStore } from "@/store/cartStore";
+import { Product } from "@/types";
+import {
+  formatCurrency,
+  isInStock,
+  getStockStatusLabel,
+  getStockStatusColor,
+} from "@/lib/utils";
+import LoadingPage from "@/components/LoadingSpinner";
+import { ErrorMessage } from "@/components/ErrorMessage";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { ShoppingCart, ArrowLeft, Minus, Plus } from 'lucide-react';
-import { fetchProductById } from '@/lib/api';
-import { useCartStore } from '@/store/cartStore';
-import { Product } from '@/types';
-import { formatCurrency, isInStock, getStockStatusLabel, getStockStatusColor } from '@/lib/utils';
-import { LoadingPage } from '@/components/LoadingSpinner';
-import { ErrorMessage } from '@/components/ErrorMessage';
+export default function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  const {id} = use(params);
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,21 +33,21 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
   useEffect(() => {
     loadProduct();
-  }, [params.id]);
+  }, [id]);
 
   const loadProduct = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchProductById(params.id);
-      
+      const data = await fetchProductById(id);
+
       if (!data) {
-        setError('Product not found');
+        setError("Product not found");
       } else {
         setProduct(data);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to load product');
+      setError(err.message || "Failed to load product");
     } finally {
       setLoading(false);
     }
@@ -45,13 +55,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
   const handleAddToCart = () => {
     if (!product || !isInStock(product.stock)) return;
-    
+
     setIsAdding(true);
     addItem(product, quantity);
-    
+
     setTimeout(() => {
       setIsAdding(false);
-      router.push('/cart');
+      router.push("/cart");
     }, 500);
   };
 
@@ -72,7 +82,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   if (!product) return <ErrorMessage message="Product not found" />;
 
   const inStock = isInStock(product.stock);
-  const imageUrl = product.image || product.imageUrl || '/placeholder.png';
+  const imageUrl = product.image || product.imageUrl || "/placeholder.png";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -96,7 +106,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           />
           {!inStock && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <span className="text-2xl font-bold text-white">Out of Stock</span>
+              <span className="text-2xl font-bold text-white">
+                Out of Stock
+              </span>
             </div>
           )}
         </div>
@@ -116,7 +128,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <span className="text-4xl font-bold text-gray-900">
               {formatCurrency(product.price)}
             </span>
-            <span className={`text-lg font-medium ${getStockStatusColor(product.stock)}`}>
+            <span
+              className={`text-lg font-medium ${getStockStatusColor(product.stock)}`}
+            >
               {getStockStatusLabel(product.stock)}
             </span>
           </div>
@@ -151,12 +165,12 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             disabled={!inStock || isAdding}
             className={`flex w-full items-center justify-center gap-2 rounded-lg px-6 py-4 text-lg font-semibold transition-colors ${
               inStock
-                ? 'bg-primary-600 text-white hover:bg-primary-700'
-                : 'cursor-not-allowed bg-gray-300 text-gray-500'
+                ? "bg-primary-600 text-white hover:bg-primary-700"
+                : "cursor-not-allowed bg-gray-300 text-gray-500"
             }`}
           >
             <ShoppingCart className="h-6 w-6" />
-            {isAdding ? 'Adding...' : inStock ? 'Add to Cart' : 'Out of Stock'}
+            {isAdding ? "Adding..." : inStock ? "Add to Cart" : "Out of Stock"}
           </button>
         </div>
       </div>
