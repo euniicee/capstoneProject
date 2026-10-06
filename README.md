@@ -4,7 +4,7 @@ A modern, full-stack e-commerce application built with Next.js 15, TypeScript, a
 
 ## Live Demo
 
-- **Local**: http://localhost:3000
+- **Deployed**: https://quickserve-project-riicwd8yz-eunices-projects-90c7f8f4.vercel.app
 
 ## Features
 
